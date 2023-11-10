@@ -7,7 +7,7 @@ import java.util.*;
 class Bowler{
     String bowlerName;
     double economy;
-    Bowler(String bowlerName,double economy){
+    Bowler(String bowlerName, double economy){
         this.bowlerName = bowlerName;
         this.economy = economy;
     }
@@ -72,7 +72,7 @@ public class Main {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(pathDeliveries));
             while((line = reader.readLine()) != null) {
-                String data[] = line.split(",");
+                String[] data = line.split(",");
                 Deliveries delivery= new Deliveries();
                 delivery.setMatch_id(data[MATCH_ID]);
                 delivery.setInning(data[INNING]);
@@ -260,6 +260,120 @@ public class Main {
         System.out.println(venueWithMostWins);
     }
 
+    // Question-6
+    // Find the number of times each team won the toss and also won the match
+    private void findNoOfTimesTeamsWonTossAndWonMatch(List<Matches> matches) {
+        Map<String, Integer> teamWonTossWonMatch = new HashMap<>();
+
+        for (Matches match : matches) {
+            if (match.getToss_winner().equals(match.getWinner())) {
+                String team = match.getToss_winner();
+                teamWonTossWonMatch.put(team, teamWonTossWonMatch.getOrDefault(team, 0) +1);
+            }
+        }
+
+        System.out.println(teamWonTossWonMatch);
+    }
+
+    // Question-7
+    // Find the players who have won the highest number of Player of the Match awards for each season
+    private void findPlayersWithMostMOMAwardsBySeason(List<Matches> matches) {
+        Map<String, Map<String, Integer>> playersWhoWonMOMAwards = new HashMap<>();
+
+        for (Matches match : matches) {
+           String season = match.getSeason();
+           String playerOfTheMatch = match.getPlayer_of_match();
+           playersWhoWonMOMAwards.putIfAbsent(season, new HashMap<>());
+           playersWhoWonMOMAwards.get(season).put(playerOfTheMatch ,playersWhoWonMOMAwards.get(season).getOrDefault(playerOfTheMatch, 0) +1);
+        }
+
+        Map<String, String> seasonTopPlayers = new HashMap<>();
+
+        for (Map.Entry<String, Map<String, Integer>> entry :playersWhoWonMOMAwards.entrySet()) {
+            String season = entry.getKey();
+            Map<String, Integer> playerAwards = entry.getValue();
+
+            String topPlayer = Collections.max(playerAwards.entrySet(), Map.Entry.comparingByValue()).getKey();
+            seasonTopPlayers.put(season, topPlayer);
+        }
+        System.out.println(seasonTopPlayers);
+    }
+
+    // Question-8
+    // Display the names of batsman who scored highest runs against 'sunrisers hyd' for each season
+    private void findBatsmenWithHighestRunsAgainstHYD(List<Matches> matches, List<Deliveries> deliveries) {
+        Map<String, String> seasonTopBatsmen = new HashMap<>();
+        String team = "Sunrisers Hyderabad";
+        String opponentTeam = " ";
+
+        for (Matches match : matches) {
+            if(match.getTeam1().equals(team)) {
+                opponentTeam = match.getTeam2();
+            } else if(match.getTeam2().equals(team)) {
+                opponentTeam = match.getTeam1();
+            }
+            String season = match.getSeason();
+            String matchId = match.getId();
+            int maxRuns = 0;
+            String topBatsman = "";
+
+            for (Deliveries delivery : deliveries) {
+                if (delivery.getMatch_id().equals(matchId)) {
+                    String batsman = delivery.getBatsman();
+                    int runs = Integer.parseInt(delivery.getBatsman_run());
+
+                    if (runs > maxRuns) {
+                        maxRuns = runs;
+                        topBatsman = batsman;
+                    }
+                }
+            }
+
+            if (!topBatsman.isEmpty()) {
+                seasonTopBatsmen.put(season, topBatsman);
+            }
+        }
+        System.out.println("Batsmen who scored the highest runs against 'Sunrisers Hyderabad' for each season:");
+        for (Map.Entry<String, String> entry : seasonTopBatsmen.entrySet()) {
+            System.out.println("Season: " + entry.getKey() + ", Batsman: " + entry.getValue());
+        }
+    }
+
+    // Question-9
+    private void findBowlerWithHighestWicketsAgainstHYD(List<Matches> matches, List<Deliveries> deliveries) {
+        String team = "Sunrisers Hyderabad";
+        Map<String, Integer> bowlerWickets = new HashMap<>();
+
+        for (Matches match : matches) {
+            String matchId = match.getId();
+
+            for (Deliveries delivery : deliveries) {
+                if (delivery.getMatch_id().equals(matchId) && delivery.getBowling_team().equals(team)) {
+                    String bowler = delivery.getBowler();
+                    String dismissalKind = delivery.getDismissal_kind();
+
+                    if (dismissalKind != null && !dismissalKind.isEmpty() &&
+                            (dismissalKind.equals("caught") || dismissalKind.equals("bowled") ||
+                                    dismissalKind.equals("lbw") || dismissalKind.equals("caught and bowled") ||
+                                    dismissalKind.equals("stumped"))) {
+                        bowlerWickets.put(bowler, bowlerWickets.getOrDefault(bowler, 0) + 1);
+                    }
+                }
+            }
+        }
+
+        if (!bowlerWickets.isEmpty()) {
+            Map.Entry<String, Integer> entry = Collections.max(bowlerWickets.entrySet(), Map.Entry.comparingByValue());
+            String topBowler = entry.getKey();
+            int wickets = entry.getValue();
+
+            System.out.println("Bowler who took the highest wickets against 'Sunrisers Hyderabad':");
+            System.out.println("Bowler: " + topBowler);
+            System.out.println("Wickets: " + wickets);
+        } else {
+            System.out.println("No bowlers took wickets against 'Sunrisers Hyderabad'.");
+        }
+    }
 
     public static void main(String[] args) {
         Main mainProcessor = new Main();
@@ -277,7 +391,11 @@ public class Main {
 
 //        mainProcessor.findMostEconomicBowlersIn2015(matchesData,deliveriesData);
 
-        mainProcessor. findVenueWhereTeamBattingFirstWonHighestNumberOfMatches(matchesData);
+//        mainProcessor. findVenueWhereTeamBattingFirstWonHighestNumberOfMatches(matchesData);
+//        mainProcessor.findNoOfTimesTeamsWonTossAndWonMatch(matchesData);
+//        mainProcessor.findPlayersWithMostMOMAwardsBySeason(matchesData);
+//        mainProcessor.findBatsmenWithHighestRunsAgainstHYD(matchesData, deliveriesData);
+            mainProcessor.findBowlerWithHighestWicketsAgainstHYD(matchesData, deliveriesData);
 
     }
 

@@ -18,7 +18,7 @@ public class Deliveries {
     private String extra_runs;
     private String total_runs;
     private String player_dismissed;
-    private String dismissed_kind;
+    private String dismissal_kind;
     private String fielder;
 
     public String getMatch_id() {
@@ -173,12 +173,12 @@ public class Deliveries {
         this.player_dismissed = player_dismissed;
     }
 
-    public String getDismissed_kind() {
-        return dismissed_kind;
+    public String getDismissal_kind() {
+        return dismissal_kind;
     }
 
-    public void setDismissed_kind(String dismissed_kind) {
-        this.dismissed_kind = dismissed_kind;
+    public void setDismissed_kind(String dismissal_kind) {
+        this.dismissal_kind = dismissal_kind;
     }
 
     public String getFielder() {

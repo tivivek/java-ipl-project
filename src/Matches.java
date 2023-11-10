@@ -161,4 +161,16 @@ public class Matches {
     public void setUmpire3(String umpire3) {
         this.umpire3 = umpire3;
     }
+
+    private int totalRuns;
+
+    public void setTotalRuns(String totalRuns) {
+        this.totalRuns = Integer.parseInt(totalRuns);
+    }
+
+    public int getTotalRuns() {
+        return totalRuns;
+    }
+
+
 }
