@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 class Bowler{
     String bowlerName;
@@ -375,6 +376,38 @@ public class Main {
         }
     }
 
+    // Question-10
+    // display the venue where Delhi Daredevils won the highest matches ?
+    private void findVenueWhereDelhiWonHighestMatches(List<Matches> matches) {
+        HashMap<String, Integer> venueAndMatches = new HashMap<>();
+
+        for (Matches match: matches) {
+            String venue = match.getVenue();
+            if (match.getWinner().equals("Delhi Daredevils")) {
+                venueAndMatches.put(venue, venueAndMatches.getOrDefault(venue, 0) +1);
+            }
+        }
+
+        Map.Entry<String, Integer> entry = Collections.max(venueAndMatches.entrySet(), Map.Entry.comparingByValue());
+        String topVenue = entry.getKey();
+        int wins = entry.getValue();
+
+        System.out.println("Venue: " + topVenue + ", Matches Won: " +wins);
+    }
+
+    // Question-11
+    // Display the highest number of times when Delhi Daredevils won the toss and won the match
+    private void findMaxTimesDelhiWonTossAndWonMatch(List<Matches> matchesList) {
+        int maxTimesWonTossAndWonMatch = 0;
+
+        for (Matches match : matchesList) {
+            if (match.getWinner().equals("Delhi Daredevils") && match.getToss_winner().equals("Delhi Daredevils")) {
+                maxTimesWonTossAndWonMatch++;
+            }
+        }
+        System.out.println(maxTimesWonTossAndWonMatch);
+    }
+
     public static void main(String[] args) {
         Main mainProcessor = new Main();
         String pathDeliveries = "/home/vivek/AutomationTrack/IPLProject/src/resources/deliveries.csv";
@@ -395,7 +428,9 @@ public class Main {
 //        mainProcessor.findNoOfTimesTeamsWonTossAndWonMatch(matchesData);
 //        mainProcessor.findPlayersWithMostMOMAwardsBySeason(matchesData);
 //        mainProcessor.findBatsmenWithHighestRunsAgainstHYD(matchesData, deliveriesData);
-            mainProcessor.findBowlerWithHighestWicketsAgainstHYD(matchesData, deliveriesData);
+//            mainProcessor.findBowlerWithHighestWicketsAgainstHYD(matchesData, deliveriesData);
+//        mainProcessor.findVenueWhereDelhiWonHighestMatches(matchesData);
+            mainProcessor.findMaxTimesDelhiWonTossAndWonMatch(matchesData);
 
     }
 
